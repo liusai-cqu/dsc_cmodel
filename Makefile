@@ -11,7 +11,7 @@ VCS_FLAGS = -sverilog -debug_access+all -lca -full64 -timescale=1ns/1ps \
             -LDFLAGS "-L. -ldsc -Wl,-rpath,."
 
 # 源文件和目标文件
-C_SRCS = dsc_model.c dsc_dpi_bridge.c
+C_SRCS = dsc_model.c dsc_dpi_bridge.c dsc_types.c
 C_OBJS = $(C_SRCS:.c=.o)
 SV_SRCS = dsc_pkg.sv dsc_test.sv
 LIB = libdsc.so
