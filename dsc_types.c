@@ -1,5 +1,5 @@
-// 包含我们的头文件而不是直接包含vc_hdrs.h
-#include "dsc_types.h"
+#include "forward_types.h"  // 先包含前向声明
+#include "dsc_types.h"      // 再包含类型定义
 #include <stdio.h>
 
 // 数据类型调试函数

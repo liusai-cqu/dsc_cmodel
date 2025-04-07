@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dsc_model.h"  // 现在包含我们自己的头文件
+#include "forward_types.h"  // 先包含前向声明
+#include "dsc_model.h"      // 再包含模型定义
 
 // 实现DPI-C函数，遵循vc_hdrs.h中的声明
 int dsc_algorithm_dpi(
