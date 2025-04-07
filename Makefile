@@ -2,7 +2,7 @@
 
 # 编译器和选项
 CC = gcc
-CFLAGS = -fPIC -Wall -I$(VCS_HOME)/include
+CFLAGS = -fPIC -Wall -I$(VCS_HOME)/include -std=c99
 LDFLAGS = -shared
 
 # VCS编译选项
@@ -34,7 +34,7 @@ $(SIM): $(LIB) $(SV_SRCS)
 
 # 运行仿真
 run: $(SIM)
-	./$(SIM) -l sim.log +vcs+dpiheader+dsc_dpi.h
+	./$(SIM) -l sim.log
 
 # 清理
 clean:
