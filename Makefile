@@ -42,9 +42,9 @@ $(SIM): $(LIB) $(SV_SRCS)
 run: $(SIM)
 	./$(SIM) -l sim.log
 
-# 清理
+# 清理（不删除.h头文件）
 clean:
-	rm -f $(C_OBJS) $(LIB) $(SIM) *.log *.h simv.daidir *.key *.vpd ucli.key
+	rm -f $(C_OBJS) $(LIB) $(SIM) *.log simv.daidir *.key *.vpd ucli.key
 	rm -rf csrc DVEfiles simv.vdb
 
 .PHONY: all run clean
