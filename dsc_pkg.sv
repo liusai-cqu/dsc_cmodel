@@ -40,13 +40,10 @@ package dsc_pkg;
     int width;
   } yuv_t;
   
-  // 图片数据联合体 - 更改为匹配C结构定义
-  typedef struct {
-    int is_rgb; // 1表示RGB，0表示YUV
-    union {
-      rgb_t rgb;
-      yuv_t yuv;
-    } data;
+  // 图片数据标记联合体 - 使用tagged union
+  typedef union tagged {
+    rgb_t RGB;
+    yuv_t YUV;
   } content_t;
   
   // 图片结构体
