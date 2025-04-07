@@ -40,6 +40,10 @@ module dsc_test;
   
   // 主测试
   initial begin
+    // 在initial块开头声明所有变量
+    int buf_size;
+    int i, j;
+    
     // 配置DSC参数
     dsc_cfg.slice_width = 1920;
     dsc_cfg.slice_height = 1080;
@@ -67,8 +71,8 @@ module dsc_test;
     
     // 初始化输入图像数据
     if (input_pic.format == FMT_YUV) begin
-      for (int i = 0; i < input_pic.h; i++) begin
-        for (int j = 0; j < input_pic.w; j++) begin
+      for (i = 0; i < input_pic.h; i++) begin
+        for (j = 0; j < input_pic.w; j++) begin
           input_pic.data.yuv.y[i][j] = $urandom_range(0, 255);
           input_pic.data.yuv.u[i][j] = $urandom_range(0, 255);
           input_pic.data.yuv.v[i][j] = $urandom_range(0, 255);
@@ -76,8 +80,8 @@ module dsc_test;
       end
     end
     
-    // 分配压缩缓冲区内存（假设最大压缩比为2:1）
-    int buf_size = (input_pic.w * input_pic.h * input_pic.bits) / 16; // 以byte为单位
+    // 计算缓冲区大小
+    buf_size = (input_pic.w * input_pic.h * input_pic.bits) / 16; // 以byte为单位
     cmpr_buf = new[buf_size];
     
     // 分配临时图像数组
