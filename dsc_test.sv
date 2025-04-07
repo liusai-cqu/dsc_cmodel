@@ -11,6 +11,10 @@ module dsc_test;
   
   // 初始化结构体
   function void initialize_structures();
+    // 函数局部变量必须在函数开始处声明
+    int buf_size;
+    int i, j;
+    
     // DSC配置初始化
     dsc_cfg.slice_width = 1920;
     dsc_cfg.slice_height = 1080;
@@ -42,14 +46,14 @@ module dsc_test;
     input_pic.data.rgb.b = new[input_pic.h];
     input_pic.data.rgb.a = new[input_pic.h];
     
-    for (int i = 0; i < input_pic.h; i++) begin
+    for (i = 0; i < input_pic.h; i++) begin
       input_pic.data.rgb.r[i] = new[input_pic.w];
       input_pic.data.rgb.g[i] = new[input_pic.w];
       input_pic.data.rgb.b[i] = new[input_pic.w];
       input_pic.data.rgb.a[i] = new[input_pic.w];
       
       // 初始化数据
-      for (int j = 0; j < input_pic.w; j++) begin
+      for (j = 0; j < input_pic.w; j++) begin
         input_pic.data.rgb.r[i][j] = 100;  // 红色分量
         input_pic.data.rgb.g[i][j] = 150;  // 绿色分量
         input_pic.data.rgb.b[i][j] = 200;  // 蓝色分量
@@ -72,8 +76,8 @@ module dsc_test;
     output_pic.framerate = input_pic.framerate;
     output_pic.interlaced = input_pic.interlaced;
     
-    // 分配压缩缓冲区
-    int buf_size = (input_pic.w * input_pic.h * 4);  // 估计大小，RGBA每像素4字节
+    // 分配压缩缓冲区 (不要在此处重新声明buf_size!)
+    buf_size = (input_pic.w * input_pic.h * 4);  // 估计大小，RGBA每像素4字节
     cmpr_buf = new[buf_size];
     
     // 临时图像数组初始化
