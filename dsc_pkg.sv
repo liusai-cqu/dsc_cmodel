@@ -21,25 +21,25 @@ package dsc_pkg;
     ALPHA_USED = 1
   } alpha_t;
   
-  // RGB数据结构 - 修正二维动态数组语法
+  // RGB数据结构
   typedef struct {
-    int r[][];  // 修改为正确的二维动态数组语法
+    int r[][];
     int g[][];
     int b[][];
     int a[][];
   } rgb_t;
   
-  // YUV数据结构 - 修正二维动态数组语法
+  // YUV数据结构
   typedef struct {
     int y[][];
     int u[][];
     int v[][];
   } yuv_t;
   
-  // 图片数据联合体
-  typedef union {
-    rgb_t rgb;
-    yuv_t yuv;
+  // 图片数据标记联合体 - 使用tagged union而不是普通union
+  typedef union tagged {
+    rgb_t RGB; // 标签名称使用大写
+    yuv_t YUV; // 标签名称使用大写
   } content_t;
   
   // 图片结构体
