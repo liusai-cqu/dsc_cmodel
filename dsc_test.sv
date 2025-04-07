@@ -9,109 +9,92 @@ module dsc_test;
   byte unsigned cmpr_buf[];
   pic_t temp_pic[];
   
-  // 辅助函数：分配图片内存
-  function void allocate_pic_memory(ref pic_t pic, int width, int height);
-    int i; // 在函数开头声明变量
-    rgb_t rgb;
-    yuv_t yuv;
-    
-    if (pic.format == FMT_RGB) begin
-      // 分配RGB数据内存
-      rgb.width = width;
-      rgb.height = height;
-      rgb.r = new[height];
-      rgb.g = new[height];
-      rgb.b = new[height];
-      rgb.a = new[height];
-      
-      for (i = 0; i < height; i++) begin
-        rgb.r[i] = new[width];
-        rgb.g[i] = new[width];
-        rgb.b[i] = new[width];
-        rgb.a[i] = new[width];
-      end
-      
-      // 使用tagged union语法
-      pic.data = tagged RGB rgb;
-    end else if (pic.format == FMT_YUV) begin
-      // 分配YUV数据内存
-      yuv.width = width;
-      yuv.height = height;
-      yuv.y = new[height];
-      yuv.u = new[height];
-      yuv.v = new[height];
-      
-      for (i = 0; i < height; i++) begin
-        yuv.y[i] = new[width];
-        yuv.u[i] = new[width];
-        yuv.v[i] = new[width];
-      end
-      
-      // 使用tagged union语法
-      pic.data = tagged YUV yuv;
-    end
-  endfunction
-  
-  // 主测试
-  initial begin
-    // 在initial块开头声明所有变量
-    int buf_size;
-    int i, j;
-    
-    // 配置DSC参数
+  // 初始化结构体
+  function void initialize_structures();
+    // DSC配置初始化
     dsc_cfg.slice_width = 1920;
     dsc_cfg.slice_height = 1080;
     dsc_cfg.bits_per_pixel = 24;
     dsc_cfg.bits_per_component = 8;
     
-    // 设置输入图像参数
-    input_pic.format = FMT_YUV;
-    input_pic.color = COLOR_YCC;
-    input_pic.chroma = CHROMA_420;
+    // 图像参数初始化
+    input_pic.format = FMT_RGB;
+    input_pic.color = COLOR_RGB;
+    input_pic.chroma = CHROMA_444;
     input_pic.alpha = ALPHA_NONE;
-    input_pic.w = 1920;
-    input_pic.h = 1080;
+    input_pic.w = 8;  // 使用小尺寸减少内存需求
+    input_pic.h = 8;
     input_pic.bits = 8;
-    input_pic.ar1 = 16;
-    input_pic.ar2 = 9;
+    input_pic.ar1 = 1;
+    input_pic.ar2 = 1;
     input_pic.frm_no = 0;
     input_pic.seq_len = 1;
-    input_pic.framerate = 60.0;
+    input_pic.framerate = 30.0;
     input_pic.interlaced = 0;
     
-    // 分配内存
-    allocate_pic_memory(input_pic, input_pic.w, input_pic.h);
-    allocate_pic_memory(output_pic, input_pic.w, input_pic.h);
+    // RGB数据初始化
+    rgb_t rgb;
+    rgb.width = input_pic.w;
+    rgb.height = input_pic.h;
     
-    // 初始化输入图像数据
-    if (input_pic.format == FMT_YUV) begin
-      // 使用tagged union访问数据
-      case (input_pic.data) matches
-        tagged YUV .yuv_data: begin
-          for (i = 0; i < input_pic.h; i++) begin
-            for (j = 0; j < input_pic.w; j++) begin
-              yuv_data.y[i][j] = $urandom_range(0, 255);
-              yuv_data.u[i][j] = $urandom_range(0, 255);
-              yuv_data.v[i][j] = $urandom_range(0, 255);
-            end
-          end
-        end
-        default: begin
-          $display("Error: Expected YUV format!");
-        end
-      endcase
+    // 分配2D数组内存
+    rgb.r = new[input_pic.h];
+    rgb.g = new[input_pic.h];
+    rgb.b = new[input_pic.h];
+    rgb.a = new[input_pic.h];
+    
+    for (int i = 0; i < input_pic.h; i++) begin
+      rgb.r[i] = new[input_pic.w];
+      rgb.g[i] = new[input_pic.w];
+      rgb.b[i] = new[input_pic.w];
+      rgb.a[i] = new[input_pic.w];
+      
+      // 初始化数据
+      for (int j = 0; j < input_pic.w; j++) begin
+        rgb.r[i][j] = 100;  // 红色分量
+        rgb.g[i][j] = 150;  // 绿色分量
+        rgb.b[i][j] = 200;  // 蓝色分量
+        rgb.a[i][j] = 255;  // 完全不透明
+      end
     end
     
-    // 计算缓冲区大小
-    buf_size = (input_pic.w * input_pic.h * input_pic.bits) / 16; // 以byte为单位
+    // 设置tagged union
+    input_pic.data = tagged RGB rgb;
+    
+    // 输出图像结构体初始化 (不需要初始化data字段)
+    output_pic.format = input_pic.format;
+    output_pic.color = input_pic.color;
+    output_pic.chroma = input_pic.chroma;
+    output_pic.alpha = input_pic.alpha;
+    output_pic.w = input_pic.w;
+    output_pic.h = input_pic.h;
+    output_pic.bits = input_pic.bits;
+    output_pic.ar1 = input_pic.ar1;
+    output_pic.ar2 = input_pic.ar2;
+    output_pic.frm_no = input_pic.frm_no;
+    output_pic.seq_len = input_pic.seq_len;
+    output_pic.framerate = input_pic.framerate;
+    output_pic.interlaced = input_pic.interlaced;
+    
+    // 分配压缩缓冲区
+    int buf_size = (input_pic.w * input_pic.h * 4);  // 估计大小，RGBA每像素4字节
     cmpr_buf = new[buf_size];
     
-    // 分配临时图像数组
-    temp_pic = new[1]; // 假设只需要一个临时图像
-    allocate_pic_memory(temp_pic[0], input_pic.w, input_pic.h); // 为临时图像分配内存
+    // 临时图像数组初始化
+    temp_pic = new[1];
+    temp_pic[0] = input_pic;  // 浅拷贝
+  endfunction
+  
+  // 主测试
+  initial begin
+    $display("初始化测试数据...");
+    initialize_structures();
     
-    // 调用DSC算法
     $display("调用DSC编码算法...");
+    
+    // 同步点确保所有初始化都完成
+    #1;
+    
     result = dsc_algorithm_dpi(
       1,           // isEncoder=1表示编码
       dsc_cfg,     // DSC配置
@@ -123,9 +106,6 @@ module dsc_test;
     
     $display("DSC算法返回结果: %d", result);
     
-    // 此处可以添加更多验证代码...
-    
     #10 $finish;
   end
-  
 endmodule

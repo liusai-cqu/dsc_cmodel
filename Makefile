@@ -32,7 +32,6 @@ $(LIB): $(C_OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 使用VCS编译SystemVerilog文件和链接共享库
-# 使用绝对路径确保链接器能找到库文件
 $(SIM): $(LIB) $(SV_SRCS)
 	$(VCS) $(VCS_FLAGS) \
 	-LDFLAGS "-L$(CURRENT_DIR) -ldsc -Wl,-rpath,$(CURRENT_DIR)" \
@@ -42,9 +41,9 @@ $(SIM): $(LIB) $(SV_SRCS)
 run: $(SIM)
 	./$(SIM) -l sim.log
 
-# 清理（注意使用-rf删除目录）
+# 清理（不删除头文件）
 clean:
 	rm -f $(C_OBJS) $(LIB) $(SIM) *.log *.key *.vpd ucli.key
-	rm -rf simv.daidir csrc DVEfiles simv.vdb
+	rm -rf csrc DVEfiles simv.vdb
 
 .PHONY: all run clean
