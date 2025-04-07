@@ -1,5 +1,3 @@
-`include "dsc_pkg.sv"
-
 module dsc_test;
   import dsc_pkg::*;
   
@@ -13,13 +11,15 @@ module dsc_test;
   
   // 辅助函数：分配图片内存
   function void allocate_pic_memory(ref pic_t pic, int width, int height);
+    int i; // 在函数开头声明变量
+    
     if (pic.format == FMT_RGB) begin
       pic.data.rgb.r = new[height];
       pic.data.rgb.g = new[height];
       pic.data.rgb.b = new[height];
       pic.data.rgb.a = new[height];
       
-      for (int i = 0; i < height; i++) begin
+      for (i = 0; i < height; i++) begin
         pic.data.rgb.r[i] = new[width];
         pic.data.rgb.g[i] = new[width];
         pic.data.rgb.b[i] = new[width];
@@ -30,7 +30,7 @@ module dsc_test;
       pic.data.yuv.u = new[height];
       pic.data.yuv.v = new[height];
       
-      for (int i = 0; i < height; i++) begin
+      for (i = 0; i < height; i++) begin
         pic.data.yuv.y[i] = new[width];
         pic.data.yuv.u[i] = new[width];
         pic.data.yuv.v[i] = new[width];
