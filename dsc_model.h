@@ -1,8 +1,7 @@
 #ifndef DSC_MODEL_H
 #define DSC_MODEL_H
 
-// 包含前向声明，然后包含类型定义
-#include "forward_types.h"
+// 只包含dsc_types.h，它已经包含了所有需要的类型定义
 #include "dsc_types.h"
 
 // DSC模型API函数声明

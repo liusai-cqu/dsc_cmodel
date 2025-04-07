@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "forward_types.h"  // 先包含前向声明
-#include "dsc_model.h"      // 再包含模型定义
+// 只包含dsc_model.h，它会包含其他需要的头文件
+#include "dsc_model.h"
 
 // 实现DPI-C函数，遵循vc_hdrs.h中的声明
 int dsc_algorithm_dpi(
@@ -101,7 +101,6 @@ int dsc_algorithm_dpi(
         printf("  临时图像数组长度: %d\n", arrLen);
         
         // 在实际项目中，这里可能会更新临时图像
-        // 由于复杂性，我们不直接处理temp_pic的内容
     } else {
         printf("  警告：temp_pic为NULL\n");
     }

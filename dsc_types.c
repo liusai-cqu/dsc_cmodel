@@ -1,5 +1,5 @@
-#include "forward_types.h"  // 先包含前向声明
-#include "dsc_types.h"      // 再包含类型定义
+// 简化包含顺序，只包含一个头文件
+#include "dsc_types.h"
 #include <stdio.h>
 
 // 数据类型调试函数

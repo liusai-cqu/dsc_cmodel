@@ -5,12 +5,6 @@
 typedef struct _rgb_t rgb_t;
 typedef struct _yuv_t yuv_t;
 
-// 简化的内容联合类型定义
-typedef union _content_t {
-  rgb_t* rgb;
-  yuv_t* yuv;
-} content_t;
-
 // RGB结构体
 struct _rgb_t {
   int width;
@@ -30,6 +24,12 @@ struct _yuv_t {
   unsigned char** v;
   unsigned char** a;
 };
+
+// 内容联合类型定义
+typedef union _content_t {
+  rgb_t* rgb;
+  yuv_t* yuv;
+} content_t;
 
 // 包含VCS生成的头文件
 #include "vc_hdrs.h"
