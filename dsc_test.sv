@@ -12,37 +12,39 @@ module dsc_test;
   // 辅助函数：分配图片内存
   function void allocate_pic_memory(ref pic_t pic, int width, int height);
     int i; // 在函数开头声明变量
-    rgb_t rgb;
-    yuv_t yuv;
     
     if (pic.format == FMT_RGB) begin
-      rgb.r = new[height];
-      rgb.g = new[height];
-      rgb.b = new[height];
-      rgb.a = new[height];
+      pic.data.is_rgb = 1; // 标记为RGB
+      
+      // 分配RGB数据内存
+      pic.data.data.rgb.width = width;
+      pic.data.data.rgb.height = height;
+      pic.data.data.rgb.r = new[height];
+      pic.data.data.rgb.g = new[height];
+      pic.data.data.rgb.b = new[height];
+      pic.data.data.rgb.a = new[height];
       
       for (i = 0; i < height; i++) begin
-        rgb.r[i] = new[width];
-        rgb.g[i] = new[width];
-        rgb.b[i] = new[width];
-        rgb.a[i] = new[width];
+        pic.data.data.rgb.r[i] = new[width];
+        pic.data.data.rgb.g[i] = new[width];
+        pic.data.data.rgb.b[i] = new[width];
+        pic.data.data.rgb.a[i] = new[width];
       end
-      
-      // 使用tagged union
-      pic.data = tagged RGB rgb;
     end else if (pic.format == FMT_YUV) begin
-      yuv.y = new[height];
-      yuv.u = new[height];
-      yuv.v = new[height];
+      pic.data.is_rgb = 0; // 标记为YUV
+      
+      // 分配YUV数据内存
+      pic.data.data.yuv.width = width;
+      pic.data.data.yuv.height = height;
+      pic.data.data.yuv.y = new[height];
+      pic.data.data.yuv.u = new[height];
+      pic.data.data.yuv.v = new[height];
       
       for (i = 0; i < height; i++) begin
-        yuv.y[i] = new[width];
-        yuv.u[i] = new[width];
-        yuv.v[i] = new[width];
+        pic.data.data.yuv.y[i] = new[width];
+        pic.data.data.yuv.u[i] = new[width];
+        pic.data.data.yuv.v[i] = new[width];
       end
-      
-      // 使用tagged union
-      pic.data = tagged YUV yuv;
     end
   endfunction
   
@@ -51,8 +53,6 @@ module dsc_test;
     // 在initial块开头声明所有变量
     int buf_size;
     int i, j;
-    rgb_t rgb;
-    yuv_t yuv;
     
     // 配置DSC参数
     dsc_cfg.slice_width = 1920;
@@ -81,21 +81,13 @@ module dsc_test;
     
     // 初始化输入图像数据
     if (input_pic.format == FMT_YUV) begin
-      // 使用tagged union访问数据
-      case (input_pic.data) matches
-        tagged YUV .yuv_data: begin
-          for (i = 0; i < input_pic.h; i++) begin
-            for (j = 0; j < input_pic.w; j++) begin
-              yuv_data.y[i][j] = $urandom_range(0, 255);
-              yuv_data.u[i][j] = $urandom_range(0, 255);
-              yuv_data.v[i][j] = $urandom_range(0, 255);
-            end
-          end
+      for (i = 0; i < input_pic.h; i++) begin
+        for (j = 0; j < input_pic.w; j++) begin
+          input_pic.data.data.yuv.y[i][j] = $urandom_range(0, 255);
+          input_pic.data.data.yuv.u[i][j] = $urandom_range(0, 255);
+          input_pic.data.data.yuv.v[i][j] = $urandom_range(0, 255);
         end
-        default: begin
-          $display("Error: Expected YUV format!");
-        end
-      endcase
+      end
     end
     
     // 计算缓冲区大小
@@ -104,6 +96,7 @@ module dsc_test;
     
     // 分配临时图像数组
     temp_pic = new[1]; // 假设只需要一个临时图像
+    allocate_pic_memory(temp_pic[0], input_pic.w, input_pic.h); // 为临时图像分配内存
     
     // 调用DSC算法
     $display("调用DSC编码算法...");
