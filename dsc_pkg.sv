@@ -21,19 +21,19 @@ package dsc_pkg;
     ALPHA_USED = 1
   } alpha_t;
   
-  // RGB数据结构
+  // RGB数据结构 - 修正二维动态数组语法
   typedef struct {
-    int[][] r;
-    int[][] g;
-    int[][] b;
-    int[][] a;
+    int r[][];  // 修改为正确的二维动态数组语法
+    int g[][];
+    int b[][];
+    int a[][];
   } rgb_t;
   
-  // YUV数据结构
+  // YUV数据结构 - 修正二维动态数组语法
   typedef struct {
-    int[][] y;
-    int[][] u;
-    int[][] v;
+    int y[][];
+    int u[][];
+    int v[][];
   } yuv_t;
   
   // 图片数据联合体
