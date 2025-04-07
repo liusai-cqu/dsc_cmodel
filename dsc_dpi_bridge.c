@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// 只包含dsc_model.h，它会包含其他需要的头文件
 #include "dsc_model.h"
+#include "svdpi.h"
 
-// 实现DPI-C函数，遵循vc_hdrs.h中的声明
+// 实现DPI-C函数
 int dsc_algorithm_dpi(
     /* INPUT */int isEncoder, 
     const /* INPUT */dsc_cfg_t *dsc_cfg, 
@@ -31,6 +31,9 @@ int dsc_algorithm_dpi(
         printf("    尺寸: %dx%d\n", ip->w, ip->h);
         printf("    格式: %d\n", ip->format);
         printf("    颜色空间: %d\n", ip->color);
+        
+        // 处理tagged union（在C端根据tag字段识别）
+        printf("    数据类型: %s\n", ip->data.tag == 0 ? "RGB" : "YUV");
     } else {
         printf("  错误：ip为NULL!\n");
         return -1;
@@ -99,8 +102,6 @@ int dsc_algorithm_dpi(
     if (temp_pic != NULL) {
         int arrLen = svLength(temp_pic, 1);
         printf("  临时图像数组长度: %d\n", arrLen);
-        
-        // 在实际项目中，这里可能会更新临时图像
     } else {
         printf("  警告：temp_pic为NULL\n");
     }

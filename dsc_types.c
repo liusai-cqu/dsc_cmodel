@@ -1,4 +1,3 @@
-// 简化包含顺序，只包含一个头文件
 #include "dsc_types.h"
 #include <stdio.h>
 

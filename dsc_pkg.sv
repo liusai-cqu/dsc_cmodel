@@ -45,14 +45,13 @@ typedef struct {
   byte unsigned a[][];
 } yuv_t;
 
-// 使用简单的联合类型代替复杂的tagged union
-// 这简化了C和SystemVerilog之间的交互
-typedef union {
-  rgb_t rgb;
-  yuv_t yuv;
+// 使用tagged union，允许使用动态类型
+typedef union tagged {
+  rgb_t RGB;
+  yuv_t YUV;
 } content_t;
 
-// DSC配置结构体 - 与vc_hdrs.h中的_vcs_dpi_dsc_cfg_t匹配
+// DSC配置结构体
 typedef struct {
   int slice_width;
   int slice_height;
@@ -60,7 +59,7 @@ typedef struct {
   int bits_per_component;
 } dsc_cfg_t;
 
-// 图像结构体 - 与vc_hdrs.h中的_vcs_dpi_pic_t匹配
+// 图像结构体
 typedef struct {
   format_e format;  // RGB或YUV
   color_e color;    // 色彩空间
@@ -77,7 +76,7 @@ typedef struct {
   content_t data;   // 图像数据
 } pic_t;
 
-// DPI-C函数声明 - 与vc_hdrs.h中的声明匹配
+// DPI-C函数声明
 import "DPI-C" function int dsc_algorithm_dpi(
   input int isEncoder,
   input dsc_cfg_t dsc_cfg,

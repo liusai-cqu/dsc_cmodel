@@ -28,13 +28,7 @@ $(LIB): $(C_OBJS)
 	chmod +x $@
 
 # 编译C文件
-dsc_types.o: dsc_types.c dsc_types.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-dsc_model.o: dsc_model.c dsc_model.h dsc_types.h
-	$(CC) $(CFLAGS) -c $< -o $@
-
-dsc_dpi_bridge.o: dsc_dpi_bridge.c dsc_model.h dsc_types.h
+%.o: %.c dsc_types.h dsc_model.h forward_types.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # 使用VCS编译SystemVerilog文件和链接共享库

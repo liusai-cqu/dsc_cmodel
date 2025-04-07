@@ -14,6 +14,7 @@ module dsc_test;
     // 函数局部变量必须在函数开始处声明
     int buf_size;
     int i, j;
+    rgb_t rgb_data;
     
     // DSC配置初始化
     dsc_cfg.slice_width = 1920;
@@ -37,29 +38,32 @@ module dsc_test;
     input_pic.interlaced = 0;
     
     // 初始化RGB数据
-    input_pic.data.rgb.width = input_pic.w;
-    input_pic.data.rgb.height = input_pic.h;
+    rgb_data.width = input_pic.w;
+    rgb_data.height = input_pic.h;
     
     // 分配2D数组内存
-    input_pic.data.rgb.r = new[input_pic.h];
-    input_pic.data.rgb.g = new[input_pic.h];
-    input_pic.data.rgb.b = new[input_pic.h];
-    input_pic.data.rgb.a = new[input_pic.h];
+    rgb_data.r = new[input_pic.h];
+    rgb_data.g = new[input_pic.h];
+    rgb_data.b = new[input_pic.h];
+    rgb_data.a = new[input_pic.h];
     
     for (i = 0; i < input_pic.h; i++) begin
-      input_pic.data.rgb.r[i] = new[input_pic.w];
-      input_pic.data.rgb.g[i] = new[input_pic.w];
-      input_pic.data.rgb.b[i] = new[input_pic.w];
-      input_pic.data.rgb.a[i] = new[input_pic.w];
+      rgb_data.r[i] = new[input_pic.w];
+      rgb_data.g[i] = new[input_pic.w];
+      rgb_data.b[i] = new[input_pic.w];
+      rgb_data.a[i] = new[input_pic.w];
       
       // 初始化数据
       for (j = 0; j < input_pic.w; j++) begin
-        input_pic.data.rgb.r[i][j] = 100;  // 红色分量
-        input_pic.data.rgb.g[i][j] = 150;  // 绿色分量
-        input_pic.data.rgb.b[i][j] = 200;  // 蓝色分量
-        input_pic.data.rgb.a[i][j] = 255;  // 完全不透明
+        rgb_data.r[i][j] = 100;  // 红色分量
+        rgb_data.g[i][j] = 150;  // 绿色分量
+        rgb_data.b[i][j] = 200;  // 蓝色分量
+        rgb_data.a[i][j] = 255;  // 完全不透明
       end
     end
+    
+    // 使用tagged union的正确赋值方式
+    input_pic.data = tagged RGB rgb_data;
     
     // 输出图像结构体初始化
     output_pic.format = input_pic.format;
@@ -76,13 +80,13 @@ module dsc_test;
     output_pic.framerate = input_pic.framerate;
     output_pic.interlaced = input_pic.interlaced;
     
-    // 分配压缩缓冲区 (不要在此处重新声明buf_size!)
+    // 分配压缩缓冲区
     buf_size = (input_pic.w * input_pic.h * 4);  // 估计大小，RGBA每像素4字节
     cmpr_buf = new[buf_size];
     
     // 临时图像数组初始化
     temp_pic = new[1];
-    // 不能复制input_pic的引用，必须创建新实例
+    // 初始化临时图像
     temp_pic[0].format = input_pic.format;
     temp_pic[0].color = input_pic.color;
     temp_pic[0].chroma = input_pic.chroma; 

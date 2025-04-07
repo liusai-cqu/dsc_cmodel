@@ -1,8 +1,8 @@
 #ifndef DSC_MODEL_H
 #define DSC_MODEL_H
 
-// 只包含dsc_types.h，它已经包含了所有需要的类型定义
 #include "dsc_types.h"
+#include "svdpi.h"
 
 // DSC模型API函数声明
 void dsc_model_init(void);
@@ -15,7 +15,8 @@ void dsc_model_init(void);
 //   buf      - 压缩数据缓冲区（输出）
 //   buf_size - 缓冲区大小
 // 返回：成功返回0，失败返回负值
-int dsc_encode(const dsc_cfg_t* cfg, const void* input, void* output, unsigned char* buf, int buf_size);
+int dsc_encode(const dsc_cfg_t* cfg, const pic_t* input, pic_t* output, 
+               unsigned char* buf, int buf_size);
 
 // DSC解码函数
 // 参数:
@@ -24,6 +25,7 @@ int dsc_encode(const dsc_cfg_t* cfg, const void* input, void* output, unsigned c
 //   buf_size - 缓冲区大小
 //   output   - 输出图像结构（输出）
 // 返回：成功返回0，失败返回负值
-int dsc_decode(const dsc_cfg_t* cfg, const unsigned char* buf, int buf_size, void* output);
+int dsc_decode(const dsc_cfg_t* cfg, const unsigned char* buf, 
+               int buf_size, pic_t* output);
 
 #endif /* DSC_MODEL_H */
