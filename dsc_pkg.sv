@@ -27,6 +27,8 @@ package dsc_pkg;
     int g[][];
     int b[][];
     int a[][];
+    int height;
+    int width;
   } rgb_t;
   
   // YUV数据结构
@@ -34,12 +36,17 @@ package dsc_pkg;
     int y[][];
     int u[][];
     int v[][];
+    int height;
+    int width;
   } yuv_t;
   
-  // 图片数据标记联合体 - 使用tagged union而不是普通union
-  typedef union tagged {
-    rgb_t RGB; // 标签名称使用大写
-    yuv_t YUV; // 标签名称使用大写
+  // 图片数据联合体 - 更改为匹配C结构定义
+  typedef struct {
+    int is_rgb; // 1表示RGB，0表示YUV
+    union {
+      rgb_t rgb;
+      yuv_t yuv;
+    } data;
   } content_t;
   
   // 图片结构体
