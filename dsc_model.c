@@ -1,6 +1,6 @@
+#include "dsc_model.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "vc_hdrs.h"
 
 // DSC模型初始化函数
 void dsc_model_init(void) {
@@ -16,6 +16,9 @@ int dsc_encode(const dsc_cfg_t* cfg, const void* input, void* output, unsigned c
         printf("编码器参数错误\n");
         return -1;
     }
+    
+    // 打印配置信息
+    print_dsc_config(cfg);
     
     // 模拟编码过程
     printf("编码设置: %dx%d, bpp=%d, bpc=%d\n", 
@@ -43,10 +46,10 @@ int dsc_decode(const dsc_cfg_t* cfg, const unsigned char* buf, int buf_size, voi
         return -1;
     }
     
+    // 打印配置信息
+    print_dsc_config(cfg);
+    
     // 模拟解码过程
-    printf("解码设置: %dx%d, bpp=%d, bpc=%d\n", 
-           cfg->slice_width, cfg->slice_height, 
-           cfg->bits_per_pixel, cfg->bits_per_component);
     
     // 检查缓冲区数据
     printf("读取压缩数据: 前10字节:");

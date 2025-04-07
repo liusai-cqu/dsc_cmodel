@@ -1,32 +1,29 @@
 #ifndef DSC_MODEL_H
 #define DSC_MODEL_H
 
+// 包含类型定义
 #include "dsc_types.h"
 
-// DSC算法的主函数
-int DSC_Algorithm(
-    int isEncoder,
-    const dsc_cfg_t* dsc_cfg,
-    const pic_t* ip,
-    pic_t* op,
-    unsigned char* cmpr_buf,
-    pic_t* temp_pic
-);
+// DSC模型API函数声明
+void dsc_model_init(void);
 
-// 简单的压缩函数
-int simple_compress(
-    const unsigned char* src,
-    int src_size,
-    unsigned char* dst,
-    int dst_size
-);
+// DSC编码函数
+// 参数:
+//   cfg      - DSC配置参数
+//   input    - 输入图像数据
+//   output   - 输出图像结构（输出）
+//   buf      - 压缩数据缓冲区（输出）
+//   buf_size - 缓冲区大小
+// 返回：成功返回0，失败返回负值
+int dsc_encode(const dsc_cfg_t* cfg, const void* input, void* output, unsigned char* buf, int buf_size);
 
-// 简单的解压缩函数
-int simple_decompress(
-    unsigned char* src,
-    int src_size,
-    unsigned char* dst,
-    int dst_size
-);
+// DSC解码函数
+// 参数:
+//   cfg      - DSC配置参数
+//   buf      - 压缩数据缓冲区（输入）
+//   buf_size - 缓冲区大小
+//   output   - 输出图像结构（输出）
+// 返回：成功返回0，失败返回负值
+int dsc_decode(const dsc_cfg_t* cfg, const unsigned char* buf, int buf_size, void* output);
 
-#endif // DSC_MODEL_H
+#endif /* DSC_MODEL_H */

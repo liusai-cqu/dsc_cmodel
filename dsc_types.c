@@ -1,9 +1,6 @@
-// 包含VCS生成的头文件
-#include "vc_hdrs.h"
+// 包含我们的头文件而不是直接包含vc_hdrs.h
+#include "dsc_types.h"
 #include <stdio.h>
-
-// 这个文件为了配合编译流程而存在，主要功能已在dsc_model.c中实现
-// 在实际项目中，可以在此文件中添加类型转换和处理函数
 
 // 数据类型调试函数
 void print_dsc_config(const dsc_cfg_t* cfg) {
