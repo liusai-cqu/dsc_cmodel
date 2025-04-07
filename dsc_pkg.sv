@@ -46,9 +46,10 @@ typedef struct {
 } yuv_t;
 
 // 图像数据联合类型 (tagged union)
-typedef union content_t {
-  tagged RGB rgb_t RGB;
-  tagged YUV yuv_t YUV;
+// 修复语法错误：使用正确的SystemVerilog tagged union语法
+typedef union tagged {
+  rgb_t RGB;
+  yuv_t YUV;
 } content_t;
 
 // DSC配置结构体 - 与vc_hdrs.h中的_vcs_dpi_dsc_cfg_t匹配
